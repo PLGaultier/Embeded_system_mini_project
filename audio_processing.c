@@ -37,7 +37,7 @@ static int16_t max_norm_index;
 #define MIN_FREQ		350
 #define MAX_FREQ		450
 
-
+//DOT and DASH are the signals for morse
 #define  DOT  2
 #define  DASH 3
 
@@ -133,7 +133,7 @@ static _Bool rotation_back_on = false;
 //the maximum value given by the calculation of the unique code is 360 so we need 361 values
 #define VAL_MAX_CALCUL 361
 
-//LUT of angles in radians function of the letter multiplied by 1000 (change of scale)
+//LUT for the n-th angle
 #define ANG_A   1
 #define ANG_B   2
 #define ANG_C   3
@@ -162,7 +162,7 @@ static _Bool rotation_back_on = false;
 #define ANG_Z   26
 #define POS_INIT   0
 
-//global table because it is a LUT
+//initialization of the LUT
 int LUT[VAL_MAX_CALCUL] = {0};
 
 void decodage(void)
@@ -183,11 +183,6 @@ void decodage(void)
         	{
         		haut = 0;
         		temps_haut += 1;
-
-        		////chprintf((BaseSequentialStream *) &SDU1, "nmbre de temps haut= ");
-				////chprintf((BaseSequentialStream *) &SDU1,"%d",temps_haut);
-				////chprintf((BaseSequentialStream *) &SDU1, "  ");
-
         	}
         	if ((temps_haut == 1) && (haut ==0))
         	{
@@ -199,19 +194,10 @@ void decodage(void)
         	{
         		bas = 0;
         		temps_bas +=1;
-
-                ////chprintf((BaseSequentialStream *) &SDU1, "nmbre de temps bas= ");
-                ////chprintf((BaseSequentialStream *) &SDU1,"%d",temps_bas);
-                ////chprintf((BaseSequentialStream *) &SDU1, "  ");
-
         	}
         	if ((temps_bas == 1) && (bas ==0))
         	{
         		sauvegarde_haut = haut + temps_haut*NB_HAUT_PAR_TEMPS_HAUT;
-
-                ////chprintf((BaseSequentialStream *) &SDU1, "sauvegarde haut = ");
-                ////chprintf((BaseSequentialStream *) &SDU1,"%d",sauvegarde_haut);
-                ////chprintf((BaseSequentialStream *) &SDU1, "  ");
         	}
         	if ((temps_haut==1*NB_HAUT_PAR_DOT/NB_HAUT_PAR_TEMPS_HAUT) || (temps_haut==2*NB_HAUT_PAR_DOT/NB_HAUT_PAR_TEMPS_HAUT) || (temps_haut==3*NB_HAUT_PAR_DOT/NB_HAUT_PAR_TEMPS_HAUT))
         	{
@@ -274,33 +260,9 @@ void decodage(void)
         	 //ensure that the LUT is not just filled with zeros
         	if (tab_carac[0] != 0)
             {
-
         		//calculate the code of the sent letter
         		code = tab_carac[0]*tab_carac[0] + tab_carac[1]*tab_carac[1]*tab_carac[1] + tab_carac[2]*tab_carac[2]*tab_carac[2]*tab_carac[2]+ tab_carac[3]*tab_carac[3]*tab_carac[3]*tab_carac[3]*tab_carac[3];
         		rotation_on = true;
-
-        		////chprintf((BaseSequentialStream *) &SDU1, "tab_carac[0]= ");
-				////chprintf((BaseSequentialStream *) &SDU1,"%f",tab_carac[0]);
-				////chprintf((BaseSequentialStream *) &SDU1, "   ");
-
-				//chprintf((BaseSequentialStream *) &SDU1, "tab_carac[1]=  ");
-				//chprintf((BaseSequentialStream *) &SDU1,"%f",tab_carac[1]);
-				//chprintf((BaseSequentialStream *) &SDU1, "   ");
-
-				//chprintf((BaseSequentialStream *) &SDU1, "tab_carac[2]= ");
-				//chprintf((BaseSequentialStream *) &SDU1,"%f",tab_carac[2]);
-				//chprintf((BaseSequentialStream *) &SDU1, "   ");
-
-				//chprintf((BaseSequentialStream *) &SDU1, "tab_carac[3]=  ");
-				//chprintf((BaseSequentialStream *) &SDU1,"%f",tab_carac[3]);
-				//chprintf((BaseSequentialStream *) &SDU1, "   ");
-
-
-
-                //chprintf((BaseSequentialStream *) &SDU1, "Voici le code     : ");
-                //chprintf((BaseSequentialStream *) &SDU1, "%d", code);
-                //chprintf((BaseSequentialStream *) &SDU1, "     ");
-
             }
             else
             {
@@ -322,7 +284,7 @@ void decodage(void)
         }
         if ((rotation_on) && ((code<=360) && (code >= 0)))
 		{
-        	//we fill the LUT with the angles corresponding to each letter
+        	//we fill the LUT with the number of increments associated with each angle
         	LUT[A] = ANG_A;
 			LUT[B] = ANG_B;
 			LUT[C] = ANG_C;
@@ -417,7 +379,6 @@ void decodage_start(void)
 {
 	chThdCreateStatic(waDecodage, sizeof(waDecodage), NORMALPRIO +1, Decodage, NULL);
 }
-
 
 
 /*

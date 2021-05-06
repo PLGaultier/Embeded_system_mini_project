@@ -16,7 +16,7 @@
 #include "sensors/proximity.h"
 
 
-//need to be declared to use proximity sensor
+//declared to use proximity sensor
 messagebus_t bus;
 MUTEX_DECL(bus_lock);
 CONDVAR_DECL(bus_condvar);

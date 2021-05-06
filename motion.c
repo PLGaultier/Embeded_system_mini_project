@@ -24,7 +24,7 @@
 #define PROXIMITY_SENSOR_IN_FRONT 0
 #define STRAIGHT_SPEED 600
 #define NBRE_STEP_FOR_ANG_A 47.88
-#define S_TO_MS 1000 //second to ms
+#define S_TO_MS 1000 //seconds to miliseconds
 
 static _Bool obstacle_detect = false;
 
@@ -32,16 +32,20 @@ static double temps_rotation;
 
 void orientation_robot (int angle_rad)
 {
+	//turn off all the LEDs that counted the high times
 	set_led(LED7,0);
 	set_led(LED5,0);
 	set_led(LED3,0);
 	set_led(LED1,0);
 	set_body_led(0);
+
+	//allows the epuck to turn on itself
 	left_motor_set_speed(ORIENTATION_SPEED);
 	right_motor_set_speed(-ORIENTATION_SPEED);
 
 	temps_rotation = (S_TO_MS*angle_rad*NBRE_STEP_FOR_ANG_A/ORIENTATION_SPEED);
 
+	//allow the epuck to turn for the time necessary to reach the angle associated with the right letter
 	chThdSleepMilliseconds(temps_rotation);
 
 	left_motor_set_speed(0);
@@ -53,7 +57,6 @@ void orientation_robot (int angle_rad)
 
 void orientation_robot_back(void)
 {
-
 	left_motor_set_speed(-ORIENTATION_SPEED);
 	right_motor_set_speed(ORIENTATION_SPEED);
 
@@ -66,13 +69,12 @@ void orientation_robot_back(void)
 }
 
 
-_Bool avance_to_obstacle()
+_Bool avance_to_obstacle(void)
 {
 	//Init for the proximity sensors
 	messagebus_topic_t *prox_topic_test = messagebus_find_topic_blocking(&bus, "/proximity");
 	proximity_msg_t prox_values; //mieux dans le main.h
 	messagebus_topic_wait(prox_topic_test, &prox_values, sizeof(prox_values));
-
 
 	if (!(obstacle_detect))
 	{
@@ -81,8 +83,6 @@ _Bool avance_to_obstacle()
 			right_motor_set_speed(STRAIGHT_SPEED);
 			left_motor_set_speed(STRAIGHT_SPEED);
 			return true;
-
-
 		}
 		else
 		{
@@ -94,7 +94,6 @@ _Bool avance_to_obstacle()
 			obstacle_detect = true;
 			return true;
 		}
-
 	}
 	else
 	{
@@ -105,8 +104,6 @@ _Bool avance_to_obstacle()
 			left_motor_set_speed(0);
 			obstacle_detect = false;
 			return false;
-
-
 		}
 		else
 		{
