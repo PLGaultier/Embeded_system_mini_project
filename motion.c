@@ -28,7 +28,7 @@
 
 static _Bool obstacle_detect = false;
 
-static temps_rotation;
+static double temps_rotation;
 
 void orientation_robot (int angle_rad)
 {

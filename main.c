@@ -78,7 +78,7 @@ int main(void)
     mic_start(&processAudioData);
 
     //starts the decoding processing thread.
-    //decodage_start();
+    decodage_start();
 
     while (1)
     {
