@@ -18,13 +18,26 @@
 #include "sensors/proximity.h"
 #include "leds.h"
 
-#define ORIENTATION_SPEED 300 //define in step/s
+//define in step/s
+#define ORIENTATION_SPEED 300
+
 #define PI 3.14
+
+//value for which an obstacle is detected
 #define THRESHOLD_FOR_COLLISION 200
+
+//number of the proximity sensor located on the front of the epuck
 #define PROXIMITY_SENSOR_IN_FRONT 0
+
 #define STRAIGHT_SPEED 600
-#define NBRE_STEP_FOR_ANG_A 47.88
-#define S_TO_MS 1000 //seconds to miliseconds
+
+//step increment to be performed for each angle to be reached according to the corresponding letter
+#define NBRE_STEP_FOR_ANG_A 47.8
+
+//seconds to miliseconds
+#define S_TO_MS 1000
+
+#define WAITING_TIME 2000
 
 static _Bool obstacle_detect = false;
 
@@ -51,7 +64,7 @@ void orientation_robot (int angle_rad)
 	left_motor_set_speed(0);
 	right_motor_set_speed(0);
 
-	chThdSleepMilliseconds(2000);
+	chThdSleepMilliseconds(WAITING_TIME);
 }
 
 
@@ -65,7 +78,7 @@ void orientation_robot_back(void)
 	left_motor_set_speed(0);
 	right_motor_set_speed(0);
 
-	chThdSleepMilliseconds(2000);
+	chThdSleepMilliseconds(WAITING_TIME);
 }
 
 
@@ -89,7 +102,7 @@ _Bool avance_to_obstacle(void)
 			right_motor_set_speed(0);
 			left_motor_set_speed(0);
 			set_front_led(1);
-			chThdSleepMilliseconds(2000);
+			chThdSleepMilliseconds(WAITING_TIME);
 			set_front_led(0);
 			obstacle_detect = true;
 			return true;
@@ -97,7 +110,7 @@ _Bool avance_to_obstacle(void)
 	}
 	else
 	{
-		//We go back to our starting position
+		//We go back to our starting position if the step counter goes to zero
 		if ((left_motor_get_pos() <= 0) || (right_motor_get_pos() <=0))
 		{
 			right_motor_set_speed(0);

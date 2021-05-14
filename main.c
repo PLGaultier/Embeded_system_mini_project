@@ -21,6 +21,7 @@ messagebus_t bus;
 MUTEX_DECL(bus_lock);
 CONDVAR_DECL(bus_condvar);
 
+
 static void serial_start(void)
 {
 	static SerialConfig ser_cfg = {

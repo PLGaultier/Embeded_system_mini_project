@@ -13,7 +13,6 @@
 #include "sensors/proximity.h"
 #include <motion.h>
 
-
 //semaphore
 static BSEMAPHORE_DECL(sendToComputer_sem, TRUE);
 
